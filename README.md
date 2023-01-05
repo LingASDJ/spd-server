@@ -23,7 +23,7 @@ Make a `config.json` file with the following values:
   ```
   
 ## Install
-`npm i
+`npm i`
 
 ## Running
 
