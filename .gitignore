@@ -13,4 +13,9 @@ server/data/config.json
 server/data/records.json
 
 # custom update script
-update.sh
+update.shelf
+
+#intellij project files
+*.iml
+*.idea
+
