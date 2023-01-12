@@ -59,6 +59,8 @@ const actions = (...args) => {
         json.depth,
         json.pos
       );
+      log(player.depth)
+      log(player.playerClass)
       socket.to(room).emit(events.ACTION, send.MOVE, payload);
       sockets.set(socket.id, { ...sockets.get(socket.id), ...json });
     },

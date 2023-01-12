@@ -3,6 +3,7 @@ module.exports = {
     ACTION: "action",
     ADMIN: "admin",
     CHAT: "chat",
+    CHEAT: "cheat",
     CONNECT: "connection",
     DISCONNECT: "disconnecting",
     MESSAGE: "message",
