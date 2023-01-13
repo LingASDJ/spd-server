@@ -48,9 +48,12 @@ const handler = (io) => {
 					new Error(
 						JSON.stringify({
 							type: 1,
-							data: "Your game is outdated. Please update your version to play."
+							data: "你的游戏版本太旧，需要更新!",
+							//动态链接和更新公告
+							link: "https://www.baidu.com",
+							motd: "SPDNET-B3更新说明:\n-1.修复了玩家物品消失的情况-Acanisue\n\n-2.修复了物品不显示的错误-Acanisue\n\n-3.优化了部分逻辑-Catand\n\n-4.离线系统&强制更新界面优化-JDSALing"
 						})
-					)
+					),
 				);
 			auth(sockets, socket, token)
 				.then(() => {
