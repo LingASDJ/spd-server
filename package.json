@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/saqfish/spd-server#readme",
   "dependencies": {
+    "@koishijs/plugin-adapter-onebot": "^5.5.4",
     "@koishijs/plugin-console": "^5.1.5",
     "@koishijs/plugin-echo": "^2.0.6",
     "@koishijs/plugin-sandbox": "^2.5.2",

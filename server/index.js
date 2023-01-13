@@ -1,3 +1,4 @@
+const { Context } = require ('koishi');
 const {readConfig} = require("./util");
 const handler = require("./handler");
 const events = require("./events/events");
@@ -16,6 +17,24 @@ const loadConfig = () => {
 			.catch(() => rej());
 	});
 };
+
+// 创建一个 Koishi 应用
+const QQbot = new Context({
+	port: 5140,
+})
+
+// 启用上述插件
+QQbot.plugin('console')
+QQbot.plugin('sandbox')
+QQbot.plugin('echo')
+QQbot.plugin('adapter-onebot', {
+	protocol: 'ws',
+	selfId: '这里改成机器人的QQ号码',
+	endpoint: 'ws://127.0.0.1:6700',
+})
+
+// 启动应用
+QQbot.start()
 
 loadConfig()
 	.then(() => {
