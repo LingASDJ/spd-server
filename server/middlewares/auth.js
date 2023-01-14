@@ -1,5 +1,4 @@
 const {log, readConfig} = require("../util");
-const events = require("../events/events");
 
 const accountTypes = {
 	ADMIN: 0,

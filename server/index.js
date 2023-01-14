@@ -1,4 +1,4 @@
-const { Context } = require ('koishi');
+const {Context} = require('koishi');
 const {readConfig} = require("./util");
 const handler = require("./handler");
 const events = require("./events/events");
@@ -47,7 +47,8 @@ loadConfig()
 
 		io.use((socket, next) => {
 			const {query, auth} = socket.handshake;
-			const acceptableVersion = query.version >= config.minVersion;
+			var minVersion = config.SPDMinVersion.toString() + config.NETMinVersion.toString()
+			const acceptableVersion = query.version >= minVersion;
 			EventHandler.handleAuth(sockets, socket, acceptableVersion, auth.token, next
 			);
 		});
