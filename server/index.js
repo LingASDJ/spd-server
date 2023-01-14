@@ -1,7 +1,8 @@
 const {Context} = require('koishi');
-const {readConfig, setScheduledTask, doTask} = require("./util");
+//const {readConfig, setScheduledTask} = require("./util");
 const handler = require("./handler");
 const events = require("./events/events");
+//const {randomSeed} = require("./changeSeed");
 
 const sockets = new Map();
 
@@ -81,7 +82,7 @@ loadConfig()
 	})
 	.catch(() => console.log("Coulnd't load config!"));
 
-setScheduledTask(20, 40, doTask);
+//setScheduledTask(21, 49, randomSeed, sockets);
 
 // 创建一个 Koishi 应用
 const QQbot = new Context({
