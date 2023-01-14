@@ -1,4 +1,5 @@
 const {log, readConfig} = require("../util");
+const events = require("../events/events");
 
 const accountTypes = {
 	ADMIN: 0,
@@ -13,16 +14,22 @@ const auth = (sockets, socket, token) =>
 			const players = new Map();
 
 			for (p of accounts)
-				players.set(p.key, {nick: p.nick, role: getRole(p)});
+				players.set(p.key, {nick: p.nick, role: getRole(p), banned: p.banned});
 
 			if (players.has(token)) {
 				const player = players.get(token);
-				sockets.set(socket.id, {socket, ...player});
-				log(socket.id, `${player.nick} identified`, player.role);
-				res();
+				if (!player.banned === true) {
+					sockets.set(socket.id, {socket, ...player});
+					log(socket.id, `${player.nick} identified`, player.role);
+					res();
+				} else {
+					log("已禁止封禁玩家进入", " 昵称: " + player.nick);
+					const e = new Error(JSON.stringify({type: 0, data: "你已被服务器封禁"}));
+					rej(e);
+				}
 			} else {
-				log(socket.id, "rejected auth");
-				const e = new Error(JSON.stringify({type: 0, data: "Your key is invalid!"}));
+				log(socket.id, "拒绝连接");
+				const e = new Error(JSON.stringify({type: 0, data: "你的key无效！"}));
 				rej(e);
 			}
 		});
