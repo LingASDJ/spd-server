@@ -125,6 +125,21 @@ const appendCheat = (data) => {
 	})
 }
 
+function setScheduledTask(hour, minute, callTask) {
+	let taskTime = new Date();
+	taskTime.setHours(hour);
+	taskTime.setMinutes(minute);
+	let timeDiff = taskTime.getTime() - (new Date()).getTime(); // 获取时间差
+	timeDiff = timeDiff > 0 ? timeDiff : (timeDiff + 24 * 60 * 60 * 1000);
+	setTimeout(function() {
+		callTask();
+		// 首次执行
+		// 1为一小时执行一次，24为一天
+		// 24小时为循环周期
+		setInterval(callTask, 1 * 60 * 60 * 1000);
+	}, timeDiff);
+}
+
 module.exports = {
 	appendCheat,
 	log,
@@ -137,4 +152,5 @@ module.exports = {
 	writeConfig,
 	readRecords,
 	writeRecords,
+	setScheduledTask
 };
