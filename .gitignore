@@ -20,3 +20,4 @@ update.shelf
 *.iml
 *.idea
 
+server/data/records.json.template
