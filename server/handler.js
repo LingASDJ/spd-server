@@ -11,6 +11,7 @@ const {auth} = require("./middlewares/auth");
 const events = require("./events/events");
 const send = require("./send");
 
+const date = new Date();
 const {version} = require("../package");
 const {readConfig, readRecords, log, appendCheat} = require("./util");
 
@@ -68,8 +69,14 @@ const handler = (io) => {
 			hio.emit(events.CHAT, socket.id, player.nick, message);
 		},
 		handleCheat: (key, data) => {
-			log('key:' + key + '  data:' + data);
-			appendCheat('key:' + key + '  data:' + data + '\n');
+			let Years = date.getFullYear();
+			let Month = date.getMonth()+1;
+			let Date = date.getDate();
+			let Hours = date.getHours();
+			let Minutes = date.getMinutes();
+			let Time = date.getSeconds();
+			log('key:' + key + '  data:' + data +"---"+"作弊时间--"+Years+"-"+ Month+"-" +Date + "---" + Hours +":"+Minutes +":"+ Time);
+			appendCheat('key:' + key + '  data:' + data +"---"+"作弊时间--"+Years+"-"+ Month+"-" +Date + "---" + Hours +":"+Minutes +":"+ Time+ '\n');
 		},
 	};
 };

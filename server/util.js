@@ -115,6 +115,7 @@ const writeRecords = (records) => {
 	);
 };
 
+//记录可疑作弊人士
 const appendCheat = (data) => {
 	fs.appendFile('./server/data/cheat.txt', data, (err) => {
 		if (err) {

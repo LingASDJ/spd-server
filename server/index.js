@@ -1,8 +1,6 @@
-const {Context} = require('koishi');
-//const {readConfig, setScheduledTask} = require("./util");
+const { readConfig } = require("./util");
 const handler = require("./handler");
 const events = require("./events/events");
-//const {randomSeed} = require("./changeSeed");
 
 const sockets = new Map();
 
@@ -54,7 +52,7 @@ loadConfig()
 				EventHandler.handleActions(sockets, socket, type, data)
 			);
 			socket.on(events.TRANSFER, (data, cb) =>
-				EventHandler.handleTransfer(config.itemSharing, socket, sockets, data, cb)
+				EventHandler.handleTransfer( config.itemSharing, socket, sockets, data, cb)
 			);
 			socket.on(events.CHAT, (message) =>
 				EventHandler.handleChat(sockets, socket, message)
@@ -73,7 +71,7 @@ loadConfig()
 		});
 
 		io.of("/").adapter.on(events.JOINROOM, (room, id) =>
-			EventHandler.handleJoinRoom(sockets, io.sockets.adapter.rooms.get(room), id)
+			EventHandler.handleJoinRoom( sockets, io.sockets.adapter.rooms.get(room), id)
 		);
 
 		io.of("/").adapter.on(events.LEAVEROOM, (room, id) =>
@@ -81,23 +79,3 @@ loadConfig()
 		);
 	})
 	.catch(() => console.log("Coulnd't load config!"));
-
-//setScheduledTask(21, 49, randomSeed, sockets);
-
-// 创建一个 Koishi 应用
-const QQbot = new Context({
-	port: 5140,
-})
-
-// 启用上述插件
-QQbot.plugin('console')
-QQbot.plugin('sandbox')
-QQbot.plugin('echo')
-QQbot.plugin('adapter-onebot', {
-	protocol: 'ws',
-	selfId: '这里改成机器人的QQ号码',
-	endpoint: 'ws://127.0.0.1:6700',
-})
-
-// 启动应用
-QQbot.start()
