@@ -15,5 +15,6 @@ module.exports = {
 	LEAVE: "leave",
 	JOINROOM: "join-room",
 	LEAVEROOM: "leave-room",
-	KICK: "kick"
+	KICK: "kick",
+	KICK_EVERYONE: "kickeveryone"
 };

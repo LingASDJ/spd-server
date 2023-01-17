@@ -1,9 +1,10 @@
-const { readConfig } = require("./util");
+const {readConfig, setScheduledTask} = require("./util");
 const handler = require("./handler");
 const events = require("./events/events");
+const {Server} = require("socket.io");
+const {randomSeed} = require("./changeSeed");
 
 const sockets = new Map();
-
 let config;
 
 const loadConfig = () => {
@@ -19,7 +20,7 @@ const loadConfig = () => {
 
 loadConfig()
 	.then(() => {
-		const io = require("socket.io")(config.port, {
+		const io = new Server(config.port, {
 			serveClient: false,
 			cookie: false,
 		});
@@ -28,7 +29,7 @@ loadConfig()
 
 		io.use((socket, next) => {
 			const {query, auth} = socket.handshake;
-			var minVersion = config.SPDMinVersion.toString() + config.NETMinVersion.toString()
+			let minVersion = config.SPDMinVersion.toString() + config.NETMinVersion.toString();
 			const acceptableVersion = query.version >= minVersion;
 			EventHandler.handleAuth(sockets, socket, acceptableVersion, auth.token, next
 			);
@@ -52,7 +53,7 @@ loadConfig()
 				EventHandler.handleActions(sockets, socket, type, data)
 			);
 			socket.on(events.TRANSFER, (data, cb) =>
-				EventHandler.handleTransfer( config.itemSharing, socket, sockets, data, cb)
+				EventHandler.handleTransfer(config.itemSharing, socket, sockets, data, cb)
 			);
 			socket.on(events.CHAT, (message) =>
 				EventHandler.handleChat(sockets, socket, message)
@@ -67,15 +68,16 @@ loadConfig()
 			});
 			socket.on(events.CHEAT, (key, data) => {
 				EventHandler.handleCheat(key, data)
-			})
+			});
 		});
 
 		io.of("/").adapter.on(events.JOINROOM, (room, id) =>
-			EventHandler.handleJoinRoom( sockets, io.sockets.adapter.rooms.get(room), id)
+			EventHandler.handleJoinRoom(sockets, io.sockets.adapter.rooms.get(room), id)
 		);
 
 		io.of("/").adapter.on(events.LEAVEROOM, (room, id) =>
 			EventHandler.handleLeaveRoom(room, id)
 		);
+		setScheduledTask(9, 0, randomSeed());
 	})
-	.catch(() => console.log("Coulnd't load config!"));
+	.catch((err) => console.log("加载配置文件失败 " + err));

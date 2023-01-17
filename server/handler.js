@@ -16,7 +16,7 @@ const {version} = require("../package");
 const {readConfig, readRecords, log, appendCheat} = require("./util");
 
 const handler = (io) => {
-	hio = io;
+	let hio = io;
 	const records = {};
 	readRecords(records).then((res) => log("HANDLER", res));
 

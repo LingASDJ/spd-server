@@ -1,12 +1,5 @@
 const {readConfig} = require("../../util");
 
-const isSeedValid = (data) => {
-	const seed = Number.parseInt(data);
-	if (!seed) return false;
-	if (seed < 1 || seed > 999999999) return false;
-	return true;
-};
-
 module.exports = (data, rej, res, sockets) => {
 	const {username, offender} = data;
 	readConfig()
