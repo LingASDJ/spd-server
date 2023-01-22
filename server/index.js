@@ -78,6 +78,6 @@ loadConfig()
 		io.of("/").adapter.on(events.LEAVEROOM, (room, id) =>
 			EventHandler.handleLeaveRoom(room, id)
 		);
-		setScheduledTask(9, 0, randomSeed());
+		setScheduledTask(9, 0, randomSeed);
 	})
 	.catch((err) => console.log("加载配置文件失败 " + err));
