@@ -29,7 +29,7 @@ loadConfig()
 
 		io.use((socket, next) => {
 			const {query, auth} = socket.handshake;
-			let minVersion = config.SPDMinVersion.toString() + config.NETMinVersion.toString();
+			let minVersion = config.spdminVersion.toString() + config.netminVersion.toString();
 			const acceptableVersion = query.version >= minVersion;
 			EventHandler.handleAuth(sockets, socket, acceptableVersion, auth.token, next
 			);
@@ -78,6 +78,6 @@ loadConfig()
 		io.of("/").adapter.on(events.LEAVEROOM, (room, id) =>
 			EventHandler.handleLeaveRoom(room, id)
 		);
-		setScheduledTask(9, 0, randomSeed);
+		//setScheduledTask(9, 0, randomSeed());
 	})
 	.catch((err) => console.log("加载配置文件失败 " + err));
