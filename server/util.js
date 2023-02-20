@@ -69,7 +69,8 @@ const writeConfig = (config) => {
 	return new Promise((res, rej) =>
 		fs.writeFile(
 			path.resolve(__dirname, "./data/config.json"),
-			JSON.stringify(config),
+			//通过 JSON.stringify 函数的第三个参数来指定缩进的空格数
+			JSON.stringify(config, null, 4),
 			function (err) {
 				if (err) {
 					rej();
@@ -122,22 +123,10 @@ const appendCheat = (data) => {
 			console.log(err)
 			return;
 		}
-		console.log('appendFile 成功')
+		//console.log('appendFile 成功')
 	})
 }
 
-function setScheduledTask(hour, minute, callTask) {
-	let taskTime = new Date();
-	taskTime.setHours(hour);
-	taskTime.setMinutes(minute);
-	let timeDiff = taskTime.getTime() - (new Date()).getTime(); // 获取时间差
-	timeDiff = timeDiff > 0 ? timeDiff : (timeDiff + 24 * 60 * 60 * 1000);
-	setTimeout(function () {
-		// 1为一小时执行一次，24为一天
-		// 24小时为循环周期
-		setInterval(callTask, 1 * 60 * 60 * 1000);
-	}, timeDiff);
-}
 
 module.exports = {
 	appendCheat,
@@ -151,5 +140,4 @@ module.exports = {
 	writeConfig,
 	readRecords,
 	writeRecords,
-	setScheduledTask
 };
