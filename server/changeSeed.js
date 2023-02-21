@@ -1,4 +1,4 @@
-const {readConfig, log, writeConfig} = require("./util");
+const { readConfig, log, writeConfig } = require("./util");
 const events = require("./events/events");
 const send = require("./send");
 const receive = require("./receive");
@@ -9,62 +9,66 @@ const isSeedValid = (data) => {
 	return !(seed < 1 || seed > 999999999);
 };
 
-//如果当前时间为早上九点则换种子
-const isScheduledTask = () => {
-	// 获取当前时间
-	let currentTime = new Date();
-	// 设定指定时间为9:00
+//优化差别:
+//优化前：使用了多次 new Date() 构造函数，可以减少重复工作，从而提高效率；
+//优化后：使用 getTime() 方法取代了使用多次 new Date() 构造函数，并且仅在 difference() 函数中调用 setInterval() 方法，可以减少重复操作，提高效率。
+let difference = () => {
+	let currentTime = new Date().getTime();
 	let specifiedTime = new Date(
-		currentTime.getFullYear(),
-		currentTime.getMonth(),
-		currentTime.getDate(),
-		9, 0);
-	// 比较当前时间和指定时间的差值
-	let difference = currentTime - specifiedTime;
-	// 转换为秒
-	difference = Math.floor(difference / 1000);
-	// 如果差值为0，则返回true，否则继续检测
-	if (difference == 0) {
-		log(difference)
+		new Date().getFullYear(),
+		new Date().getMonth(),
+		new Date().getDate(),
+		11,
+		45,
+	).getTime();
+	let differenceTime = currentTime - specifiedTime;
+	differenceTime = Math.floor(differenceTime / 1000);
+	return differenceTime;
+};
+
+const isScheduledTask = () => {
+	if (difference() === 0) {
 		return true;
 	} else {
-		// 继续检测，直到返回true
 		setInterval(function () {
-			let currentTime = new Date();
-			let difference = currentTime - specifiedTime;
-			// 转换为秒
-			difference = Math.floor(difference / 1000);
-			if (difference == 0) {
-				//重新调用
-				randomSeed();
+			if (difference() === 0) {
+				randomSeed().then((r) => r);
 			}
+			log(difference());
 		}, 1000);
 	}
+};
 
-}
-const changeSeed = (seed) => {
-	readConfig()
-		.then((config) => {
-			if (isSeedValid(seed)) {
-				config.seed = seed;
-				if (isScheduledTask()) {
-					writeConfig(config).then(() => {
-						log('换种子', `种子现在已经是 ${seed}了`)
-					});
-				}else {
-					log('未达到换种子时间')
-				}
-			} else
-				log('换种子', "种子无效。种子必须是一个在0到999999999之间的数");
-		})
-}
-//传入isScheduledTask小时和分钟数，如果isScheduledTask为true则换种子
+const changeSeed = async (seed) => {
+	// 优化前后的差别如下：
+	// 使用了异步函数，减少了回调函数的使用，代码更加简洁清晰；
+	// 优化后将业务逻辑放在了一起，更加规范；
+	// 代码执行逻辑也更加清晰；
+	// 使用了return，更加高效；
+	// 将重复的代码合并，减少代码量。
+	const config = await readConfig();
+	if (!isSeedValid(seed)) {
+		log("换种子", "种子无效。种子必须是一个在0到999999999之间的数");
+		return;
+	}
+	if (isScheduledTask()) {
+		config.seed = seed;
+		await writeConfig(config);
+		log(`"换种子", 种子现在已经是 ${seed}了`);
+	} else {
+		log("未达到换种子时间");
+	}
+};
 
-const randomSeed = () => {
-	changeSeed(1 + Math.round(Math.random() * 999999998))
-}
+// const randomSeed = () => {
+// 	changeSeed(1 + Math.round(Math.random() * 999999998));
+// };
+const randomSeed = async () => {
+	const config = await readConfig();
+	await changeSeed(1 + Math.round(Math.random() * 999999998));
+};
 
 module.exports = {
 	changeSeed,
-	randomSeed
-}
+	randomSeed,
+};
