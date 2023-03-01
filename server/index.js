@@ -2,7 +2,7 @@ const {readConfig, setScheduledTask} = require("./util");
 const handler = require("./handler");
 const events = require("./events/events");
 const {Server} = require("socket.io");
-const {randomSeed} = require("./changeSeed");
+const {isScheduledTask} = require("./changeSeed");
 
 const sockets = new Map();
 let config;
@@ -61,7 +61,7 @@ loadConfig()
 			socket.on(events.ADMIN, (type, data, cb) => {
 				EventHandler.handleAdmin(type, data, sockets, socket)
 					.then((res) => {
-						loadConfig();
+						loadConfig().then(r => r);
 						cb(res);
 					})
 					.catch(() => cb("Aborted"));
@@ -78,7 +78,5 @@ loadConfig()
 		io.of("/").adapter.on(events.LEAVEROOM, (room, id) =>
 			EventHandler.handleLeaveRoom(room, id)
 		);
-		//换种子
-		randomSeed()
 	})
 	.catch((err) => console.log("加载配置文件失败 " + err));
